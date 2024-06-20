@@ -30,6 +30,7 @@ class synapse(
     Hash    $additional_config = {},
     Boolean $registration_enabled = false,
     String  $registration_secret = 'changeme',
+    Array   $resources = ['client'],
 ) {
     include "${module_name}::repo"
     include "${module_name}::install"

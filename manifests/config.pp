@@ -16,6 +16,7 @@ class synapse::config(
   Hash    $additional_config    = $synapse::additional_config,
   Boolean $registration_enabled = $synapse::registration_enabled,
   String  $registration_secret  = $synapse::registration_secret,
+  Array   $resources            = $synapse::resources,
 ) inherits synapse {
   file { $synapse::conf_dir:
     ensure => directory,
@@ -66,10 +67,12 @@ class synapse::config(
     notify  => Service[$synapse::service_name]
   }
 
-  concat::fragment { 'synapse-homeserver-config':
-    target  => "${synapse::conf_dir}/homeserver.yaml",
-    content => hash2yaml($additional_config),
-    order   => '01'
+  unless empty($additional_config) {
+    concat::fragment { 'synapse-homeserver-config':
+      target  => "${synapse::conf_dir}/homeserver.yaml",
+      content => hash2yaml($additional_config),
+      order   => '01'
+    }
   }
 
   concat::fragment { 'synapse-homeserver':
